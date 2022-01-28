@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+        integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <link rel="stylesheet" href="cards.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <title>Document</title>
+</head>
+
+<body>
+
+
+        <script>
+            $("<div class='container'></div>").appendTo("body");
+            $("<div class='row'></div>").appendTo(".container")
+            function NewCard() {
+                var card =
+                    '<div class="col-md-4 mb-3">' +
+                        '<div class="card h-100">' +
+                            '<img src="" class=" card-img-top bookCover" alt="">' +
+                            '<div class="card-body">' +
+                                '<h5 class="card-title bookTitle"></h5>' +
+                                '<h6 class="card-subtitle mb-2 text-muted bookAuthor"></h6>' +
+                                '<p class="card-text bookDesc"></p>' +
+                                '<span class="bookPrice h5"></span>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>';
+                $(".row").append(card);
+            }
+
+            $.get("https://api.nytimes.com/svc/books/v3/lists.json?list=paperback-nonfiction&api-key=Q9HgVATe2M1GAOt1AHFoYgAkf5CVszqc",
+                function (data) {
+                    for(let i = 0; i < 3; i++){
+                        NewCard();
+
+                        $("h5.bookTitle").eq(i).html(data.results[i].book_details[0].title);
+                        $("h6.bookAuthor").eq(i).html(`${data.results[i].book_details[0].author} `);
+                        $("p.bookDesc").eq(i).html(`${data.results[i].book_details[0].description}`)
+                        $(".bookCover").eq(i).attr("src",
+                            `https://covers.openlibrary.org/b/isbn/${data.results[i].isbns[0].isbn13}-L.jpg`)
+
+                        $.get(`https://booksrun.com/api/v3/price/buy/${data.results[i].isbns[0].isbn10}?key=agtm0v4p0ahd4z3fo8pt`,
+                            function (data) {   
+                                $("h6.bookAuthor").eq(i).append(`${data.result.offers.booksrun.new.price}$`);
+                            });
+                    }
+                });
+        </script>
+</body>
+
+</html>
