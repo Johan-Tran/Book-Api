@@ -19,6 +19,7 @@
         <script>
             $("<div class='container'></div>").appendTo("body");
             $("<div class='row'></div>").appendTo(".container")
+            //Funktionen som skapar kortet
             function NewCard() {
                 var card =
                     '<div class="col-md-4 mb-3">' +
@@ -37,14 +38,15 @@
 
             $.get("https://api.nytimes.com/svc/books/v3/lists.json?list=paperback-nonfiction&api-key=Q9HgVATe2M1GAOt1AHFoYgAkf5CVszqc",
                 function (data) {
+                    //For-loop för att skapa tre kort och lägga till information om böckerna.
                     for(let i = 0; i < 3; i++){
                         NewCard();
-
+                        //eq är elementen för den specifika klassen.
                         $("h5.bookTitle").eq(i).html(data.results[i].book_details[0].title);
                         $("h6.bookAuthor").eq(i).html(`${data.results[i].book_details[0].author} `);
-                        $("p.bookDesc").eq(i).html(`${data.results[i].book_details[0].description}`)
+                        $("p.bookDesc").eq(i).html(`${data.results[i].book_details[0].description}`);
                         $(".bookCover").eq(i).attr("src",
-                            `https://covers.openlibrary.org/b/isbn/${data.results[i].isbns[0].isbn13}-L.jpg`)
+                            `https://covers.openlibrary.org/b/isbn/${data.results[i].isbns[0].isbn13}-L.jpg`);
 
                         $.get(`https://booksrun.com/api/v3/price/buy/${data.results[i].isbns[0].isbn10}?key=agtm0v4p0ahd4z3fo8pt`,
                             function (data) {   
